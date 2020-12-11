@@ -68,8 +68,8 @@ func TestFraction_Reduce(t *testing.T) {
 
 func Benchmark_Reduce(b *testing.B) {
 	// run the Fib function b.N times
-	first := new(big.Int).SetInt64(400)
-	second := new(big.Int).SetInt64(284)
+	first := new(big.Int).SetInt64(1000)
+	second := new(big.Int).SetInt64(285)
 	for n := 0; n < b.N; n++ {
 		NewFraction(*first, *second).Reduce()
 	}
