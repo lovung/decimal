@@ -23,10 +23,10 @@ jobs:
 
     - name: Get dependencies
       run: |
-        go mod tidy && go mod vendor
-
+        go get -v -t -d ./...
     - name: Build
       run: go build -v ./...
 
     - name: Test
-      run: go test -v ./...
+      run: |
+        go test -v -race -coverprofile=coverage.txt -covermode=atomic ./... && bash <(curl -s https://codecov.io/bash)
