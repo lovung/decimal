@@ -4,23 +4,22 @@ import "math/big"
 
 // GCDEuclidean calculates GCD by Euclidian algorithm.
 func GCDEuclidean(a, b big.Int) big.Int {
-	na, nb := a, b
-	pa, pb := &na, &nb
-	for pa.Cmp(pb) != 0 {
-		if pa.Cmp(pb) > 0 {
-			pa = pa.Sub(pa, pb)
+	na, nb := new(big.Int).Set(&a), new(big.Int).Set(&b)
+	for na.Cmp(nb) != 0 {
+		if na.Cmp(nb) > 0 {
+			na.Sub(na, nb)
 		} else {
-			pb = pb.Sub(pb, pa)
+			nb.Sub(nb, na)
 		}
 	}
 
-	return na
+	return *na
 }
 
 // GCDRemainderRecursive calculates GCD recursively using remainder.
 func GCDRemainderRecursive(a, b big.Int) big.Int {
-	na, nb := a, b
-	pa := gcdRemainderRecursive(&na, &nb)
+	na, nb := new(big.Int).Set(&a), new(big.Int).Set(&b)
+	pa := gcdRemainderRecursive(na, nb)
 	return *pa
 }
 
@@ -33,11 +32,12 @@ func gcdRemainderRecursive(a, b *big.Int) *big.Int {
 
 // GCDRemainder calculates GCD iteratively using remainder.
 func GCDRemainder(a, b big.Int) big.Int {
-	if b.Cmp(zeroInt) != 0 {
-		c := b
+	var c = new(big.Int)
+	for b.Cmp(zeroInt) != 0 {
+		c.Set(&b)
 		pb := a.Mod(&a, &b)
 		b = *pb
-		a = c
+		a = *c
 	}
 
 	return a
