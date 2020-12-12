@@ -18,7 +18,5 @@ func main() {
 	feeFrac := num.NewFractionFromDecimal(fee)
 	feeMinFrac := num.NewFractionFromDecimal(feeMin)
 	feeAmtFrac := num.NewFractionFromDecimal(feeAmt)
-	// fmt.Println(feeAmtFrac.Decimal())
-	// fmt.Println(feeMinFrac.Div(feeAmtFrac).Decimal())
 	fmt.Println(feeMinFrac.Div(feeAmtFrac).Mul(feeFrac).Decimal())
 }

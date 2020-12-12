@@ -80,7 +80,7 @@ func (f Fraction) Mul(m Fraction) Fraction {
 	f.Numerator.Mul(&f.Numerator, &m.Numerator)
 	f.Denominator.Mul(&f.Denominator, &m.Denominator)
 
-	return f.Reduce()
+	return f
 }
 
 // Div devices fraction by given fraction.
@@ -88,7 +88,7 @@ func (f Fraction) Div(m Fraction) Fraction {
 	f.Numerator.Mul(&f.Numerator, &m.Denominator)
 	f.Denominator.Mul(&f.Denominator, &m.Numerator)
 
-	return f.Reduce()
+	return f
 }
 
 func (f Fraction) Inverse() Fraction {
