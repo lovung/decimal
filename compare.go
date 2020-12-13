@@ -24,11 +24,11 @@ func (bd BigDecimal) cmpSameScale(ref BigDecimal) int {
 		return 0
 	}
 	if bd.denominator == 0 {
-		return -signInt64(ref.numerator * ref.denominator)
+		return -1
 	}
 	if ref.denominator == 0 {
-		return signInt64(bd.numerator * bd.denominator)
+		return 1
 	}
-	return signInt64(bd.numerator*ref.denominator - bd.denominator*ref.numerator)
+	return signInt64(int64(bd.numerator*ref.denominator) - int64(bd.denominator*ref.numerator))
 
 }

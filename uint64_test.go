@@ -21,7 +21,7 @@ func Test_tenPow(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want int64
+		want uint64
 	}{
 		{args: args{0}, want: 1},
 		{args: args{1}, want: 10},
