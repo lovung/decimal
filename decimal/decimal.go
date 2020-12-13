@@ -1,6 +1,8 @@
 package decimal
 
-import "math/big"
+import (
+	"math/big"
+)
 
 // BigDecimal real value is
 //		d = (value + numerator / denominator) * 10 ^ (-scale)
@@ -17,6 +19,31 @@ type BigDecimal struct {
 	denominator int64
 
 	strCache string
+}
+
+var (
+	Zero = BigDecimal{
+		big.NewInt(0),
+		0, 0, 0, "0",
+	}
+	One = BigDecimal{
+		big.NewInt(1),
+		0, 0, 0, "1",
+	}
+	Ten = BigDecimal{
+		big.NewInt(10),
+		0, 0, 0, "1",
+	}
+)
+
+func New(ref BigDecimal) BigDecimal {
+	ref.ensureInitialized()
+	return BigDecimal{
+		value:       new(big.Int).Set(ref.value),
+		scale:       ref.scale,
+		numerator:   ref.numerator,
+		denominator: ref.denominator,
+	}
 }
 
 // NewBigDecimal returns a new fixed-point big decimal.
@@ -79,11 +106,20 @@ func (bd *BigDecimal) ensureInitialized() {
 	}
 }
 
-func (bd BigDecimal) Cmp(ref BigDecimal) int {
-	// TODO: implement
-	return 0
+func (bd BigDecimal) toFractionIgnoreScale() (*big.Int, *big.Int) {
+	if bd.denominator == 0 {
+		return new(big.Int).Set(bd.value), new(big.Int).Set(oneInt)
+	}
+	num, dem := new(big.Int).SetInt64(bd.numerator), new(big.Int).SetInt64(bd.denominator)
+	vMulD := new(big.Int).Set(bd.value)
+	vMulD = vMulD.Mul(vMulD, dem)
+	num.Add(num, vMulD)
+	return num, dem
 }
 
+// rescale helps to change the scale value but keep the real decimal value.
+// rescale supports some operators; basically, the sum/add methods need two numbers
+// have the same scale
 func (bd BigDecimal) rescale(scale int32) BigDecimal {
 	bd.ensureInitialized()
 
@@ -114,5 +150,26 @@ func (bd BigDecimal) rescale(scale int32) BigDecimal {
 		bigDec.denominator = bd.denominator
 	}
 
+	if absInt64(bigDec.numerator) > absInt64(bigDec.denominator) {
+		bigDec.value = bigDec.value.Add(bigDec.value, new(big.Int).SetInt64(bigDec.numerator/bigDec.denominator))
+		bigDec.numerator %= bigDec.denominator
+	}
+
 	return bigDec
+}
+
+// RescalePair rescales two decimals to common exponential value (minimal exp of both decimals)
+func RescalePair(d1 BigDecimal, d2 BigDecimal) (BigDecimal, BigDecimal) {
+	d1.ensureInitialized()
+	d2.ensureInitialized()
+
+	if d1.scale == d2.scale {
+		return d1, d2
+	}
+
+	baseScale := maxInt32(d1.scale, d2.scale)
+	if baseScale != d1.scale {
+		return d1.rescale(baseScale), d2
+	}
+	return d1, d2.rescale(baseScale)
 }

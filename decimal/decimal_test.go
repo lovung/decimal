@@ -22,6 +22,17 @@ func TestBigDecimal_rescale(t *testing.T) {
 	}{
 		{
 			fields: fields{
+				new(big.Int).SetInt64(123),
+				-1, 1, 3, "",
+			},
+			scale: -1,
+			want: BigDecimal{
+				new(big.Int).SetInt64(123),
+				-1, 1, 3, "",
+			},
+		},
+		{
+			fields: fields{
 				new(big.Int).SetInt64(12),
 				0, 1, 3, "",
 			},
@@ -49,8 +60,8 @@ func TestBigDecimal_rescale(t *testing.T) {
 			},
 			scale: 2,
 			want: BigDecimal{
-				new(big.Int).SetInt64(12300),
-				2, 100, 3, "",
+				new(big.Int).SetInt64(12333),
+				2, 1, 3, "",
 			},
 		},
 	}
