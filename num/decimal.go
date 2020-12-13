@@ -410,13 +410,12 @@ func (d Decimal) rescale(exp int32) Decimal {
 	}
 
 	// NOTE(vadim): must convert exps to float64 before - to prevent overflow
-	diff := math.Abs(float64(exp) - float64(d.exp))
 	value := new(big.Int).Set(d.value)
-
-	expScale := new(big.Int).Exp(tenInt, big.NewInt(int64(diff)), nil)
 	if exp > d.exp {
+		expScale := new(big.Int).Exp(tenInt, big.NewInt(int64(exp-d.exp)), nil)
 		value = value.Quo(value, expScale)
 	} else if exp < d.exp {
+		expScale := new(big.Int).Exp(tenInt, big.NewInt(int64(d.exp-exp)), nil)
 		value = value.Mul(value, expScale)
 	}
 
