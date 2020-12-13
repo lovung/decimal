@@ -14,7 +14,7 @@ func sumFraction(n1, d1, n2, d2 uint64) (uint64, uint64) {
 	return (n1*d2 + n2*d1) / demGCD, d1 * d2 / demGCD
 }
 
-var gcd = gcdEuclidean
+var gcd = gcdRemainder
 
 // gcdEuclidean calculates GCD by Euclidian algorithm.
 func gcdEuclidean(a, b uint64) uint64 {
