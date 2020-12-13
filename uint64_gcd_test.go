@@ -41,26 +41,26 @@ func actAndAssertWithInvalidData(t *testing.T, fp func(uint64, uint64) uint64) {
 	}
 }
 
-func TestgcdEuclidean(t *testing.T) {
+func Test_gcdEuclidean(t *testing.T) {
 	actAndAssert(t, gcdEuclidean)
 }
 
-func TestgcdRemainderRecursive(t *testing.T) {
+func Test_gcdRemainderRecursive(t *testing.T) {
 	actAndAssert(t, gcdRemainderRecursive)
 }
 
-func TestgcdRemainder(t *testing.T) {
+func Test_gcdRemainder(t *testing.T) {
 	actAndAssert(t, gcdRemainder)
 }
 
-func TestgcdEuclideanWithInvalidData(t *testing.T) {
+func Test_gcdEuclideanWithInvalidData(t *testing.T) {
 	actAndAssertWithInvalidData(t, gcdEuclidean)
 }
 
-func TestgcdRemainderRecursiveWithInvalidData(t *testing.T) {
+func Test_gcdRemainderRecursiveWithInvalidData(t *testing.T) {
 	actAndAssertWithInvalidData(t, gcdRemainderRecursive)
 }
 
-func TestgcdRemainderWithInvalidData(t *testing.T) {
+func Test_gcdRemainderWithInvalidData(t *testing.T) {
 	actAndAssertWithInvalidData(t, gcdRemainder)
 }

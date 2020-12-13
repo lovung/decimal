@@ -21,6 +21,7 @@ type BigDecimal struct {
 	strCache string
 }
 
+// Exported const for some common number
 var (
 	Zero = BigDecimal{
 		big.NewInt(0),
@@ -36,6 +37,7 @@ var (
 	}
 )
 
+// New returns the new BigDecimal from another BigDecimal
 func New(ref BigDecimal) BigDecimal {
 	ref.ensureInitialized()
 	return BigDecimal{
@@ -57,18 +59,21 @@ func NewBigDecimal(value int64, scale int32) BigDecimal {
 	}
 }
 
+// NewBigDecimalFromInt64 returns a new fixed-point big decimal with int64
 func NewBigDecimalFromInt64(value int64) BigDecimal {
 	return BigDecimal{
 		value: big.NewInt(value),
 	}
 }
 
+// NewBigDecimalFromInt returns a new fixed-point big decimal with int
 func NewBigDecimalFromInt(value int) BigDecimal {
 	return BigDecimal{
 		value: big.NewInt(int64(value)),
 	}
 }
 
+// NewBigDecimalFromBigInt returns a new fixed-point big decimal with big.Int and scale
 func NewBigDecimalFromBigInt(value *big.Int, scale int32) BigDecimal {
 	return BigDecimal{
 		value: new(big.Int).Set(value),
