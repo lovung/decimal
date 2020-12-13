@@ -10,6 +10,7 @@ var (
 	fourInt    = big.NewInt(4)
 	fiveInt    = big.NewInt(5)
 	tenInt     = big.NewInt(10)
+	twelveInt  = big.NewInt(12)
 	twentyInt  = big.NewInt(20)
 	thirdtyInt = big.NewInt(30)
 	fourtyInt  = big.NewInt(40)
