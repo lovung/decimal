@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/lovung/gomath/num"
+	"github.com/lovung/decimal/num"
 )
 
 func main() {

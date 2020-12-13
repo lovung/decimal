@@ -1,3 +1,3 @@
-module github.com/lovung/gomath
+module github.com/lovung/decimal
 
 go 1.15
