@@ -1,2 +1,3 @@
-# gomath
-Mathematic library - Addition for standard math library
+# Decimal
+Mathematic library for the Decimal number
+

@@ -4,20 +4,20 @@ import "testing"
 
 // Arrange
 var cases = []struct {
-	expected, a, b int64
+	expected, a, b uint64
 }{
 	{1, 4, 3},
 	{10, 40, 30},
 }
 
 var invalidCases = []struct {
-	expected, a, b int64
+	expected, a, b uint64
 }{
 	{2, 4, 3},
 	{5, 40, 30},
 }
 
-func actAndAssert(t *testing.T, fp func(int64, int64) int64) {
+func actAndAssert(t *testing.T, fp func(uint64, uint64) uint64) {
 	for _, c := range cases {
 		// Act
 		actual := fp(c.a, c.b)
@@ -29,7 +29,7 @@ func actAndAssert(t *testing.T, fp func(int64, int64) int64) {
 	}
 }
 
-func actAndAssertWithInvalidData(t *testing.T, fp func(int64, int64) int64) {
+func actAndAssertWithInvalidData(t *testing.T, fp func(uint64, uint64) uint64) {
 	for _, c := range invalidCases {
 		// Act
 		actual := fp(c.a, c.b)

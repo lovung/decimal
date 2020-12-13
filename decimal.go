@@ -15,8 +15,8 @@ type BigDecimal struct {
 	value *big.Int
 	scale int32
 
-	numerator   int64
-	denominator int64
+	numerator   uint64
+	denominator uint64
 
 	strCache string
 }
@@ -110,51 +110,57 @@ func (bd BigDecimal) toFractionIgnoreScale() (*big.Int, *big.Int) {
 	if bd.denominator == 0 {
 		return new(big.Int).Set(bd.value), new(big.Int).Set(oneInt)
 	}
-	num, dem := new(big.Int).SetInt64(bd.numerator), new(big.Int).SetInt64(bd.denominator)
+	num, dem := new(big.Int).SetUint64(bd.numerator), new(big.Int).SetUint64(bd.denominator)
 	vMulD := new(big.Int).Set(bd.value)
 	vMulD = vMulD.Mul(vMulD, dem)
 	num.Add(num, vMulD)
 	return num, dem
 }
 
+func (bd *BigDecimal) optimize() {
+	if bd.numerator > bd.denominator {
+		bd.value = bd.value.Add(bd.value, new(big.Int).SetUint64(bd.numerator/bd.denominator))
+		bd.numerator %= bd.denominator
+	}
+}
+
 // rescale helps to change the scale value but keep the real decimal value.
 // rescale supports some operators; basically, the sum/add methods need two numbers
 // have the same scale
 func (bd BigDecimal) rescale(scale int32) BigDecimal {
+	bigDec := BigDecimal{}
 	bd.ensureInitialized()
+	bigDec.ensureInitialized()
 
 	if bd.scale == scale {
-		return BigDecimal{
+		bigDec = BigDecimal{
 			value:       new(big.Int).Set(bd.value),
 			scale:       bd.scale,
 			numerator:   bd.numerator,
 			denominator: bd.denominator,
 		}
+		bigDec.optimize()
+		return bigDec
 	}
 	diffScale := scale - bd.scale
 	value := new(big.Int).Set(bd.value)
-	bigDec := BigDecimal{value: value, scale: scale}
+	bigDec = BigDecimal{value: value, scale: scale}
 	if diffScale < 0 {
 		expScale := new(big.Int).Exp(tenInt, big.NewInt(int64(-diffScale)), nil)
 		rem := new(big.Int)
-		value, rem = value.QuoRem(value, expScale, rem)
-		r := rem.Int64()
+		value, rem = value.DivMod(value, expScale, rem)
+		r := rem.Uint64()
 		bigDec.numerator, bigDec.denominator = sumFraction(
-			r, expScale.Int64(),
-			bd.numerator, bd.denominator*expScale.Int64(),
+			r, expScale.Uint64(),
+			bd.numerator, bd.denominator*expScale.Uint64(),
 		)
 	} else {
 		expScale := new(big.Int).Exp(tenInt, big.NewInt(int64(diffScale)), nil)
 		value = value.Mul(value, expScale)
-		bigDec.numerator = bd.numerator * expScale.Int64()
+		bigDec.numerator = bd.numerator * expScale.Uint64()
 		bigDec.denominator = bd.denominator
 	}
-
-	if absInt64(bigDec.numerator) > absInt64(bigDec.denominator) {
-		bigDec.value = bigDec.value.Add(bigDec.value, new(big.Int).SetInt64(bigDec.numerator/bigDec.denominator))
-		bigDec.numerator %= bigDec.denominator
-	}
-
+	bigDec.optimize()
 	return bigDec
 }
 

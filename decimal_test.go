@@ -10,8 +10,8 @@ func TestBigDecimal_rescale(t *testing.T) {
 	type fields struct {
 		value       *big.Int
 		scale       int32
-		numerator   int64
-		denominator int64
+		numerator   uint64
+		denominator uint64
 		strCache    string
 	}
 	tests := []struct {
@@ -62,6 +62,39 @@ func TestBigDecimal_rescale(t *testing.T) {
 			want: BigDecimal{
 				new(big.Int).SetInt64(12333),
 				2, 1, 3, "",
+			},
+		},
+		{
+			fields: fields{
+				new(big.Int).SetInt64(-12),
+				0, 1, 3, "",
+			},
+			scale: -1,
+			want: BigDecimal{
+				new(big.Int).SetInt64(-2),
+				-1, 25, 30, "",
+			},
+		},
+		{
+			fields: fields{
+				new(big.Int).SetInt64(-12),
+				0, 5, 3, "",
+			},
+			scale: 0,
+			want: BigDecimal{
+				new(big.Int).SetInt64(-11),
+				0, 2, 3, "",
+			},
+		},
+		{
+			fields: fields{
+				new(big.Int).SetInt64(12),
+				0, 5, 3, "",
+			},
+			scale: 0,
+			want: BigDecimal{
+				new(big.Int).SetInt64(13),
+				0, 2, 3, "",
 			},
 		},
 	}
