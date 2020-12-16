@@ -4,31 +4,31 @@ package decimal
 // returns: 1 if bd > ref
 //			0 if bd = ref
 //		   -1 if bd < ref
-func (bd BigDecimal) Cmp(ref BigDecimal) int {
-	bd.ensureInitialized()
+func (d BigDecimal) Cmp(ref BigDecimal) int {
+	d.ensureInitialized()
 	ref.ensureInitialized()
 
-	if bd.scale != ref.scale {
-		rbd, rref := RescalePair(bd, ref)
+	if d.scale != ref.scale {
+		rbd, rref := rescalePair(d, ref)
 		return rbd.cmpSameScale(rref)
 	}
-	return bd.cmpSameScale(ref)
+	return d.cmpSameScale(ref)
 }
 
-func (bd BigDecimal) cmpSameScale(ref BigDecimal) int {
-	valueCmp := bd.value.Cmp(ref.value)
+func (d BigDecimal) cmpSameScale(ref BigDecimal) int {
+	valueCmp := d.value.Cmp(ref.value)
 	if valueCmp != 0 {
 		return valueCmp
 	}
-	if bd.denominator == 0 && ref.denominator == 0 {
+	if d.denominator == 0 && ref.denominator == 0 {
 		return 0
 	}
-	if bd.denominator == 0 {
+	if d.denominator == 0 {
 		return -1
 	}
 	if ref.denominator == 0 {
 		return 1
 	}
-	return signInt64(int64(bd.numerator*ref.denominator) - int64(bd.denominator*ref.numerator))
+	return signInt64(int64(d.numerator*ref.denominator) - int64(d.denominator*ref.numerator))
 
 }
