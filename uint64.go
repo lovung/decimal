@@ -7,8 +7,14 @@ func tenPow(exponent uint64) uint64 {
 }
 
 func sumFraction(n1, d1, n2, d2 uint64) (uint64, uint64) {
-	if d1 == 0 || d2 == 0 {
-		panic(ErrZeroDenominator)
+	if d1 == 0 && d2 == 0 {
+		return 0, 0
+	}
+	if d1 == 0 && d2 != 0 {
+		return n2, d2
+	}
+	if d2 == 0 && d1 != 0 {
+		return n1, d1
 	}
 	demGCD := gcd(d1, d2)
 	return (n1*d2 + n2*d1) / demGCD, d1 * d2 / demGCD

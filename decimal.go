@@ -25,15 +25,19 @@ type BigDecimal struct {
 var (
 	Zero = BigDecimal{
 		big.NewInt(0),
-		0, 0, 0, "0",
+		0, 0, 0, "",
 	}
 	One = BigDecimal{
 		big.NewInt(1),
-		0, 0, 0, "1",
+		0, 0, 0, "",
+	}
+	Two = BigDecimal{
+		big.NewInt(2),
+		0, 0, 0, "",
 	}
 	Ten = BigDecimal{
 		big.NewInt(10),
-		0, 0, 0, "1",
+		0, 0, 0, "",
 	}
 )
 
@@ -105,50 +109,56 @@ func NewBigDecimalFromString(value string) (BigDecimal, error) {
 	return BigDecimal{}, nil
 }
 
-func (bd *BigDecimal) ensureInitialized() {
-	if bd.value == nil {
-		bd.value = new(big.Int)
+func (d *BigDecimal) ensureInitialized() {
+	if d.value == nil {
+		d.value = new(big.Int)
 	}
 }
 
-func (bd BigDecimal) toFractionIgnoreScale() (*big.Int, *big.Int) {
-	if bd.denominator == 0 {
-		return new(big.Int).Set(bd.value), new(big.Int).Set(oneInt)
+func (d BigDecimal) toFractionIgnoreScale() (*big.Int, *big.Int) {
+	if d.denominator == 0 {
+		return new(big.Int).Set(d.value), new(big.Int).Set(oneInt)
 	}
-	num, dem := new(big.Int).SetUint64(bd.numerator), new(big.Int).SetUint64(bd.denominator)
-	vMulD := new(big.Int).Set(bd.value)
+	num, dem := new(big.Int).SetUint64(d.numerator), new(big.Int).SetUint64(d.denominator)
+	vMulD := new(big.Int).Set(d.value)
 	vMulD = vMulD.Mul(vMulD, dem)
 	num.Add(num, vMulD)
 	return num, dem
 }
 
-func (bd *BigDecimal) optimize() {
-	if bd.numerator > bd.denominator {
-		bd.value = bd.value.Add(bd.value, new(big.Int).SetUint64(bd.numerator/bd.denominator))
-		bd.numerator %= bd.denominator
+func (d *BigDecimal) optimize() {
+	if d.denominator == 0 {
+		return
+	}
+	if d.numerator >= d.denominator {
+		d.value = d.value.Add(d.value, new(big.Int).SetUint64(d.numerator/d.denominator))
+		d.numerator %= d.denominator
+	}
+	if d.numerator == 0 {
+		d.denominator = 0
 	}
 }
 
 // rescale helps to change the scale value but keep the real decimal value.
 // rescale supports some operators; basically, the sum/add methods need two numbers
 // have the same scale
-func (bd BigDecimal) rescale(scale int32) BigDecimal {
+func (d BigDecimal) rescale(scale int32) BigDecimal {
 	bigDec := BigDecimal{}
-	bd.ensureInitialized()
+	d.ensureInitialized()
 	bigDec.ensureInitialized()
 
-	if bd.scale == scale {
+	if d.scale == scale {
 		bigDec = BigDecimal{
-			value:       new(big.Int).Set(bd.value),
-			scale:       bd.scale,
-			numerator:   bd.numerator,
-			denominator: bd.denominator,
+			value:       new(big.Int).Set(d.value),
+			scale:       d.scale,
+			numerator:   d.numerator,
+			denominator: d.denominator,
 		}
 		bigDec.optimize()
 		return bigDec
 	}
-	diffScale := scale - bd.scale
-	value := new(big.Int).Set(bd.value)
+	diffScale := scale - d.scale
+	value := new(big.Int).Set(d.value)
 	bigDec = BigDecimal{value: value, scale: scale}
 	if diffScale < 0 {
 		expScale := new(big.Int).Exp(tenInt, big.NewInt(int64(-diffScale)), nil)
@@ -157,20 +167,20 @@ func (bd BigDecimal) rescale(scale int32) BigDecimal {
 		r := rem.Uint64()
 		bigDec.numerator, bigDec.denominator = sumFraction(
 			r, expScale.Uint64(),
-			bd.numerator, bd.denominator*expScale.Uint64(),
+			d.numerator, d.denominator*expScale.Uint64(),
 		)
 	} else {
 		expScale := new(big.Int).Exp(tenInt, big.NewInt(int64(diffScale)), nil)
 		value = value.Mul(value, expScale)
-		bigDec.numerator = bd.numerator * expScale.Uint64()
-		bigDec.denominator = bd.denominator
+		bigDec.numerator = d.numerator * expScale.Uint64()
+		bigDec.denominator = d.denominator
 	}
 	bigDec.optimize()
 	return bigDec
 }
 
-// RescalePair rescales two decimals to common exponential value (minimal exp of both decimals)
-func RescalePair(d1 BigDecimal, d2 BigDecimal) (BigDecimal, BigDecimal) {
+// rescalePair rescales two decimals to common exponential value (minimal exp of both decimals)
+func rescalePair(d1 BigDecimal, d2 BigDecimal) (BigDecimal, BigDecimal) {
 	d1.ensureInitialized()
 	d2.ensureInitialized()
 
