@@ -25,15 +25,19 @@ type BigDecimal struct {
 var (
 	Zero = BigDecimal{
 		big.NewInt(0),
-		0, 0, 0, "0",
+		0, 0, 0, "",
 	}
 	One = BigDecimal{
 		big.NewInt(1),
-		0, 0, 0, "1",
+		0, 0, 0, "",
+	}
+	Two = BigDecimal{
+		big.NewInt(2),
+		0, 0, 0, "",
 	}
 	Ten = BigDecimal{
 		big.NewInt(10),
-		0, 0, 0, "1",
+		0, 0, 0, "",
 	}
 )
 
@@ -123,9 +127,15 @@ func (d BigDecimal) toFractionIgnoreScale() (*big.Int, *big.Int) {
 }
 
 func (d *BigDecimal) optimize() {
-	if d.numerator > d.denominator {
+	if d.denominator == 0 {
+		return
+	}
+	if d.numerator >= d.denominator {
 		d.value = d.value.Add(d.value, new(big.Int).SetUint64(d.numerator/d.denominator))
 		d.numerator %= d.denominator
+	}
+	if d.numerator == 0 {
+		d.denominator = 0
 	}
 }
 
