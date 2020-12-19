@@ -68,3 +68,67 @@ func TestBigDecimal_Add(t *testing.T) {
 		})
 	}
 }
+
+func TestBigDecimal_Sub(t *testing.T) {
+	tests := []struct {
+		name   string
+		fields BigDecimal
+		args   BigDecimal
+		want   BigDecimal
+	}{
+		{
+			fields: One,
+			args:   One,
+			want:   Zero,
+		},
+		{
+			fields: One,
+			args:   Zero,
+			want:   One,
+		},
+		{
+			fields: BigDecimal{
+				value:       new(big.Int).Set(oneInt),
+				scale:       -1,
+				numerator:   1,
+				denominator: 3,
+			},
+			args: One,
+			want: BigDecimal{
+				value:       new(big.Int).SetInt64(12),
+				scale:       0,
+				numerator:   1,
+				denominator: 3,
+			},
+		},
+		{
+			fields: BigDecimal{
+				value:       new(big.Int).Set(oneInt),
+				scale:       -1,
+				numerator:   1,
+				denominator: 3,
+			},
+			args: BigDecimal{
+				value:       new(big.Int).Set(oneInt),
+				scale:       -1,
+				numerator:   2,
+				denominator: 3,
+			},
+			want: BigDecimal{
+				value:       new(big.Int).SetInt64(-1),
+				scale:       -1,
+				numerator:   2,
+				denominator: 3,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := tt.fields
+			got := d.Sub(tt.args)
+			if got.Cmp(tt.want) != 0 {
+				t.Errorf("BigDecimal.Sub() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

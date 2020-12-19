@@ -6,7 +6,7 @@ func tenPow(exponent uint64) uint64 {
 	return uint64(math.Pow(10, float64(exponent)))
 }
 
-func sumFraction(n1, d1, n2, d2 uint64) (uint64, uint64) {
+func addFraction(n1, d1, n2, d2 uint64) (uint64, uint64) {
 	if d1 == 0 && d2 == 0 {
 		return 0, 0
 	}
@@ -18,6 +18,20 @@ func sumFraction(n1, d1, n2, d2 uint64) (uint64, uint64) {
 	}
 	demGCD := gcd(d1, d2)
 	return (n1*d2 + n2*d1) / demGCD, d1 * d2 / demGCD
+}
+
+func subFraction(n1, d1, n2, d2 uint64) (int64, uint64) {
+	if d1 == 0 && d2 == 0 {
+		return 0, 0
+	}
+	if d1 == 0 && d2 != 0 {
+		return -int64(n2), d2
+	}
+	if d2 == 0 && d1 != 0 {
+		return int64(n1), d1
+	}
+	demGCD := gcd(d1, d2)
+	return (int64(n1*d2) - int64(n2*d1)) / int64(demGCD), d1 * d2 / demGCD
 }
 
 var gcd = gcdRemainder
