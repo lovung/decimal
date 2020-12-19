@@ -21,26 +21,6 @@ type BigDecimal struct {
 	strCache string
 }
 
-// Exported const for some common number
-var (
-	Zero = BigDecimal{
-		big.NewInt(0),
-		0, 0, 0, "",
-	}
-	One = BigDecimal{
-		big.NewInt(1),
-		0, 0, 0, "",
-	}
-	Two = BigDecimal{
-		big.NewInt(2),
-		0, 0, 0, "",
-	}
-	Ten = BigDecimal{
-		big.NewInt(10),
-		0, 0, 0, "",
-	}
-)
-
 // New returns the new BigDecimal from another BigDecimal
 func New(ref BigDecimal) BigDecimal {
 	ref.ensureInitialized()
@@ -165,7 +145,7 @@ func (d BigDecimal) rescale(scale int32) BigDecimal {
 		rem := new(big.Int)
 		value, rem = value.DivMod(value, expScale, rem)
 		r := rem.Uint64()
-		bigDec.numerator, bigDec.denominator = sumFraction(
+		bigDec.numerator, bigDec.denominator = addFraction(
 			r, expScale.Uint64(),
 			d.numerator, d.denominator*expScale.Uint64(),
 		)
