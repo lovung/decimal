@@ -39,6 +39,22 @@ func TestBigDecimal_Add(t *testing.T) {
 			},
 		},
 		{
+			fields: One,
+			args: BigDecimal{
+				value:       new(big.Int).Set(oneInt),
+				scale:       -1,
+				numerator:   1,
+				denominator: 3,
+			},
+			want: BigDecimal{
+				value:       new(big.Int).SetInt64(14),
+				scale:       0,
+				numerator:   1,
+				denominator: 3,
+			},
+		},
+
+		{
 			fields: BigDecimal{
 				value:       new(big.Int).Set(oneInt),
 				scale:       -1,
@@ -98,6 +114,21 @@ func TestBigDecimal_Sub(t *testing.T) {
 				value:       new(big.Int).SetInt64(12),
 				scale:       0,
 				numerator:   1,
+				denominator: 3,
+			},
+		},
+		{
+			fields: One,
+			args: BigDecimal{
+				value:       new(big.Int).Set(oneInt),
+				scale:       -1,
+				numerator:   1,
+				denominator: 3,
+			},
+			want: BigDecimal{
+				value:       new(big.Int).SetInt64(-13),
+				scale:       0,
+				numerator:   2,
 				denominator: 3,
 			},
 		},
