@@ -108,6 +108,9 @@ func (d BigDecimal) toFractionIgnoreScale() (*big.Int, *big.Int) {
 
 func (d *BigDecimal) optimize() {
 	if d.denominator == 0 {
+		if d.numerator != 0 {
+			panic("denominator is zero but numerator not")
+		}
 		return
 	}
 	if d.numerator >= d.denominator {
