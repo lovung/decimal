@@ -12,9 +12,9 @@ https://godoc.org/github.com/lovung/decimal
 # TODO
 
 ## Basic operators
-- [ ] Add
-- [ ] Sub
-- [ ] Mul
+- [x] Add
+- [x] Sub
+- [x] Mul
 - [ ] Div
 - [ ] Abs
 - [ ] Neg
