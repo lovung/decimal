@@ -7,7 +7,8 @@
 
 # Document
 
-https://godoc.org/github.com/lovung/decimal
+- https://pkg.go.dev/github.com/lovung/decimal
+- https://godoc.org/github.com/lovung/decimal
 
 # TODO
 
@@ -15,9 +16,9 @@ https://godoc.org/github.com/lovung/decimal
 - [x] Add
 - [x] Sub
 - [x] Mul
-- [ ] Div
-- [ ] Abs
-- [ ] Neg
+- [x] Div
+- [x] Abs
+- [x] Neg
 - [ ] Sign
 
 ## Comparing
