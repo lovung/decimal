@@ -201,3 +201,43 @@ func TestBigDecimal_Abs(t *testing.T) {
 		})
 	}
 }
+
+func TestBigDecimal_Sign(t *testing.T) {
+	tests := []struct {
+		name   string
+		fields BigDecimal
+		want   int
+	}{
+		{"#1", One, 1},
+		{"#2", Zero, 0},
+		{"#3", BigDecimal{
+			value: new(big.Int).SetInt64(-1),
+		}, -1},
+		{"#4", BigDecimal{
+			value:       new(big.Int).SetInt64(0),
+			scale:       -1,
+			numerator:   1,
+			denominator: 3,
+		}, 1},
+		{"#5", BigDecimal{
+			value:       new(big.Int).SetInt64(-1),
+			scale:       -1,
+			numerator:   1,
+			denominator: 3,
+		}, -1},
+		{"#6", BigDecimal{
+			value:       new(big.Int).SetInt64(-1),
+			scale:       -1,
+			numerator:   3,
+			denominator: 3,
+		}, 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := tt.fields
+			if got := d.Sign(); got != tt.want {
+				t.Errorf("BigDecimal.Sign() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

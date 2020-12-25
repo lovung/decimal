@@ -19,16 +19,15 @@
 - [x] Div
 - [x] Abs
 - [x] Neg
-- [ ] Sign
 
-## Comparing
+## Comparing & Signing
 - [x] Cmp
+- [x] Sign
 - [ ] Equal
 
 ## Advance operators
 - [ ] Pow
 - [ ] Shift
-- [ ] Rounding
 - [ ] Sin
 - [ ] Asin
 - [ ] Cos
@@ -57,3 +56,7 @@
 - [ ] Min
 - [ ] Max
 
+## Rounding
+- [ ] Round
+- [ ] RoundUp
+- [ ] RoundDown

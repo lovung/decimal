@@ -78,3 +78,17 @@ func (d BigDecimal) Abs() BigDecimal {
 	}
 	return d
 }
+
+// Sign returns the sign of decimal
+// -1 for negative
+// 0 for zero
+// 1 for positive
+func (d BigDecimal) Sign() int {
+	if d.IsPositive() {
+		return 1
+	}
+	if d.IsNegative() {
+		return -1
+	}
+	return 0
+}
