@@ -23,7 +23,7 @@
 ## Comparing & Signing
 - [x] Cmp
 - [x] Sign
-- [ ] Equal
+- [x] Equal
 
 ## Advance operators
 - [ ] Pow

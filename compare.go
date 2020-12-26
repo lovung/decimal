@@ -32,3 +32,12 @@ func (d BigDecimal) cmpSameScale(ref BigDecimal) int {
 	return signInt64(int64(d.numerator*ref.denominator) - int64(d.denominator*ref.numerator))
 
 }
+
+// Equal returns true if d == ref
+// and returns false if d != ref
+func (d BigDecimal) Equal(ref BigDecimal) bool {
+	if d.Cmp(ref) != 0 {
+		return false
+	}
+	return true
+}
